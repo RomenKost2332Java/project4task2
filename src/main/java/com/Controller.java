@@ -21,9 +21,9 @@ public class Controller {
         Scanner sc = new Scanner(System.in);
         int userInt, comparing;
         do {
-            userInt = getValidationUserInput(sc);
+            userInt = getInBoundsUserInput(sc);
             comparing = model.guessNumber(userInt);
-            processComparing(comparing, userInt);
+            processComparingMessage(comparing, userInt);
         } while (comparing != Model.EQUALS);
     }
 
@@ -32,27 +32,33 @@ public class Controller {
      * @param comparing - comparing of user the number and the mystery number.
      * @param userInt - the user's attempt to guess the mystery number.
      */
-    private void processComparing(int comparing, int userInt){
+    private void processComparingMessage(int comparing, int userInt){
         switch (comparing){
             case Model.SMALLER: {
-                view.printfMessage(View.NOT_GUESS, View.SMALLER, userInt);
+                view.printfMessage(View.NOT_GUESS, View.LESS, userInt);
                 break;
             }
             case Model.BIGGER: {
-                view.printfMessage(View.NOT_GUESS, View.BIGGER, userInt);
-                break;
-            }
-            case Model.OUT_OF_BOUNDS:{
-                view.printfMessage(View.NOT_IN_BOUNDS, model.getMinBoundInt(), model.getMaxBoundInt());
+                view.printfMessage(View.NOT_GUESS, View.MORE, userInt);
                 break;
             }
             case Model.EQUALS:{
                 view.printfMessage(View.WIN_MESSAGE, userInt);
-                view.printfMessage(View.USER_STATISTIC, model.guessesSize());
-                view.printLastTries(model.getGuesses());
+                view.printfMessage(View.COUNT_GUESSES, model.guessesSize());
+                view.printMessage(View.LAST_ATTEMPTS + model.getGuesses().toString());
                 break;
             }
         }
+    }
+
+
+    private int getInBoundsUserInput(Scanner sc){
+        int userInt = getValidationUserInput(sc);
+        while (!model.isInBounds(userInt)) {
+            view.printfMessage(View.NOT_IN_BOUNDS, model.getMinBoundInt(), model.getMaxBoundInt());
+            userInt = getValidationUserInput(sc);
+        }
+        return userInt;
     }
 
     /**
@@ -61,20 +67,12 @@ public class Controller {
      * @return the int value that user has input.
      */
     private int getValidationUserInput(Scanner sc){
-        preprocessLastTriesMessage();
         view.printfMessage(View.INPUT, model.getMinBoundInt(), model.getMaxBoundInt());
         while (!sc.hasNextInt()){
-            preprocessLastTriesMessage();
-            view.printlnMessage(View.NON_INT);
+            view.printMessage(View.NON_INT);
             view.printfMessage(View.INPUT, model.getMinBoundInt(), model.getMaxBoundInt());
             sc.next();
         }
         return sc.nextInt();
-    }
-
-    private void preprocessLastTriesMessage(){
-        if (model.guessesSize() != 0){
-            view.printLastTries(model.getGuesses());
-        }
     }
 }

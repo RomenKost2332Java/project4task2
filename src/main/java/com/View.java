@@ -4,21 +4,20 @@ package com;
  * @author Roman Kostenko
  */
 public class View {
-    public static final String INPUT = "Guess the number! Range [%d, %d]:";
-    public static final String LAST_TRIES = "The tries: ";
-    public static final String DELIMITER = ", ";
+    public static final String INPUT = "Guess the number! Diapason is (%d, %d):";
+    public static final String LAST_ATTEMPTS = "The attempts: ";
 
-    public static final String NON_INT = "Wrong input! Non int value. ";
-    public static final String NOT_IN_BOUNDS = "Wrong input! Out of range [%d, %d].";
+    public static final String NON_INT = "Wrong input! Non int value.";
+    public static final String NOT_IN_BOUNDS = "Wrong input! Out of diapason (%d, %d).";
 
-    public static final String NOT_GUESS = "The number wasn't guessed. The number is %s %d.";
-    public static final String BIGGER = "bigger then";
-    public static final String SMALLER = "smaller then";
+    public static final String NOT_GUESS = "Guessed wrong. The number is %s than %d.";
+    public static final String MORE = "more";
+    public static final String LESS = "less";
 
     public static final String WIN_MESSAGE = "Congratulation! The number is %d!";
-    public static final String USER_STATISTIC = "The user guessed the number with %d tries.";
+    public static final String COUNT_GUESSES = "The number was guessed for %d attempts.";
 
-    public void printlnMessage(String message){
+    protected void printMessage(String message){
         System.out.println(message);
     }
 
@@ -26,18 +25,4 @@ public class View {
         System.out.printf(message, args);
         System.out.println();
     }
-
-    /**
-     * This method prints last guesses with user-friendly interphase.
-     * @param guesses - the iterable set of guesses to display.
-     */
-    public void printLastTries(Iterable<Integer> guesses){
-        StringBuilder message = new StringBuilder(LAST_TRIES);
-        for(int guess:guesses){
-            message.append(guess).append(DELIMITER);
-        }
-        message.delete(message.length()-DELIMITER.length(), message.length());
-        printlnMessage(message.toString());
-    }
-
 }

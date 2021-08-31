@@ -10,30 +10,29 @@ public class Model {
     public static final int SMALLER = -1;
     public static final int EQUALS = 0;
     public static final int BIGGER = 1;
-    public static final int OUT_OF_BOUNDS = 2;
 
-    private final int MAX_INT = 100;
-    private final int MYSTERY_NUMBER;
+    private static final int MAX_INT = 100;
+    private static final int MIN_INT = 0;
+
+    private final int mysteryNumber;
 
     private int maxBoundInt = MAX_INT;
-    private int minBoundInt = 0;
+    private int minBoundInt = MIN_INT;
 
     private final List<Integer> guesses = new ArrayList<>();
 
     public Model(){
-        MYSTERY_NUMBER = generateMysteryNumber();
+        mysteryNumber = generateMysteryNumber();
     }
 
-    public Model(int mysteryNumber) {
-        if (minBoundInt <= mysteryNumber && mysteryNumber <= maxBoundInt){
-            MYSTERY_NUMBER = mysteryNumber;
-        } else {
-            MYSTERY_NUMBER = generateMysteryNumber();
-        }
+    public Model(int mysteryNumber, int maxBoundInt, int minBoundInt) {
+        this.mysteryNumber = mysteryNumber;
+        this.minBoundInt = minBoundInt;
+        this.maxBoundInt = maxBoundInt;
     }
 
     private int generateMysteryNumber(){
-        return (int) (Math.random() * (MAX_INT + 1));
+        return (int) (Math.random() * (MAX_INT - MIN_INT - 1) + 1 + MIN_INT);
     }
 
     /**
@@ -43,22 +42,23 @@ public class Model {
      * @return information about comparing.
      */
     public int guessNumber(int userInt){
-        if (minBoundInt > userInt || userInt > maxBoundInt){
-            return OUT_OF_BOUNDS;
-        }
+        int comparing = Integer.compare(mysteryNumber, userInt);
         guesses.add(userInt);
-        int comparing = Integer.compare(MYSTERY_NUMBER, userInt);
         switch (comparing){
             case SMALLER: {
-                maxBoundInt = userInt - 1;
+                maxBoundInt = userInt;
                 break;
             }
             case BIGGER: {
-                minBoundInt = userInt + 1;
+                minBoundInt = userInt;
                 break;
             }
         }
         return comparing;
+    }
+
+    public boolean isInBounds(int userInt) {
+        return minBoundInt < userInt && userInt < maxBoundInt;
     }
 
     public int getMaxBoundInt() {

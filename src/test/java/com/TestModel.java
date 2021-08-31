@@ -1,16 +1,15 @@
-import com.Model;
+package com;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
 
 public class TestModel  {
     private Model model;
 
     @Before
     public void resetBounds() {
-        model = new Model(50);
+        model = new Model(50, 0, 100);
     }
 
     @Test
@@ -29,32 +28,24 @@ public class TestModel  {
     }
 
     @Test
-    public void testGuessNumberOutOfBounds(){
-        Assert.assertEquals(Model.OUT_OF_BOUNDS, model.guessNumber(105));
-    }
-
-    @Test
     public void testGuessNumberUpdateMinBound() {
         model.guessNumber(25);
-        Assert.assertEquals(26, model.getMinBoundInt());
+        Assert.assertEquals(25, model.getMinBoundInt());
     }
 
     @Test
     public void testGuessNumberUpdateMaxBound() {
         model.guessNumber(75);
-        Assert.assertEquals(74, model.getMaxBoundInt());
+        Assert.assertEquals(75, model.getMaxBoundInt());
     }
 
     @Test
-    public void testGuessNumberGuesses() {
-        final var rightGuesses =  new ArrayList<Integer>();
-        rightGuesses.add(75);
-        rightGuesses.add(60);
-        rightGuesses.add(55);
-        model.guessNumber(75);
-        model.guessNumber(80);
-        model.guessNumber(60);
-        model.guessNumber(55);
-        Assert.assertEquals(model.getGuesses(), rightGuesses);
+    public void testIsInBoundsFalse() {
+        Assert.assertFalse(model.isInBounds(0));
+    }
+
+    @Test
+    public void testIsInBoundsTrue() {
+        Assert.assertFalse(model.isInBounds(1));
     }
 }
